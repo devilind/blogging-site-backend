@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const express = require('express');
+const serverless = require('serverless-http');
 const app = express();
 const port = process.env.PORT || 3000;
 // const cors = require('cors')
@@ -25,6 +26,12 @@ app.use('/api/', blogRouter);
 app.use('/api/', subRouter);
 app.use('/api', contactRouter);
 
-app.listen(port, () => {
-    console.log(`Listening on port: ${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`Listening on port: ${port}`);
+// });
+
+app.use('/.netlify/functions/api', blogRouter)
+app.use('/.netlify/functions/api', subRouter)
+app.use('/.netlify/functions/api', contactRouter)
+
+module.exports.handler = serverless(app)
